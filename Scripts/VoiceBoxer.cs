@@ -2,49 +2,45 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VoiceBoxer : MonoBehaviour
-{
-    public static VoiceBoxer instance { get; private set; }
+namespace MoodyLib.VoiceBoxer {
 
-    public List<AudioClip> letters;
+    public class VoiceBoxer : MonoBehaviour {
+        public static VoiceBoxer instance { get; private set; }
 
-    public Dictionary<string, AudioClip> letterMap;
-    private AudioSource audioSource;
+        public List<AudioClip> letters;
 
-    private void Start()
-    {
-        audioSource = GetComponent<AudioSource>();
-        letterMap = new Dictionary<string, AudioClip>();
+        private Dictionary<string, AudioClip> _letterMap;
+        private AudioSource _audioSource;
 
-        foreach (var l in letters)
-            letterMap.Add(l.name, l);
+        private void Start() {
+            _audioSource = GetComponent<AudioSource>();
+            _letterMap = new Dictionary<string, AudioClip>();
 
-        instance = this;
-    }
+            foreach (var l in letters)
+                _letterMap.Add(l.name, l);
 
-    public void Speak(string letter)
-    {
-        if (letterMap.ContainsKey(letter.ToLower()))
-            audioSource.PlayOneShot(letterMap[letter.ToLower()]);
-        else if (letter == ".")
-            audioSource.PlayOneShot(letterMap["longblank"]);
-        else if (letter == " ")
-            audioSource.PlayOneShot(letterMap["blank"]);
-    }
+            instance = this;
+        }
 
-    public void Talk(string text)
-    {
-        StartCoroutine(DoTalk(text));
-    }
+        public void Speak(string letter) {
+            if (_letterMap.ContainsKey(letter.ToLower())) {
+                _audioSource.PlayOneShot(_letterMap[letter.ToLower()]);
+            } else if (letter == ".") {
+                _audioSource.PlayOneShot(_letterMap["longblank"]);
+            } else if (letter == " ") {
+                _audioSource.PlayOneShot(_letterMap["blank"]);
+            }
+        }
 
-    private IEnumerator DoTalk(string text)
-    {
-        for (var i = 0; i < text.Length; i++)
-        {
-            Speak(text[i].ToString());
-            yield return new WaitForSeconds(0.03f);
+        public void Talk(string text) {
+            StartCoroutine(DoTalk(text));
+        }
+
+        private IEnumerator DoTalk(string text, float delay = 0.03f) {
+            for (var i = 0; i < text.Length; i++) {
+                Speak(text[i].ToString());
+                yield return new WaitForSeconds(delay);
+            }
         }
     }
-
-
 }
