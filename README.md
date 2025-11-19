@@ -1,4 +1,4 @@
-# VoiceBoxer
+# MoodyLib.GibberishDialogue
 A Unity Component which allows funny dialogues with gibberish sounds, as seen in some games like *Animal Crossing* or *Celeste*.
 
 ## Package Contents
